@@ -44,7 +44,6 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES turtlebot3_lane_detection
  CATKIN_DEPENDS cv_bridge image_transport message_generation roscpp sensor_msgs std_msgs
  DEPENDS system_lib
 )
@@ -63,3 +62,4 @@ include_directories(
 add_executable(lane_detection src/main.cpp src/lane_detection.cpp)
 target_link_libraries(lane_detection ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_dependencies(lane_detection ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
