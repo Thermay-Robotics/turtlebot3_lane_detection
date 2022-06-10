@@ -32,6 +32,8 @@ private:
     image_transport::Subscriber camera_sub;
     image_transport::ImageTransport it;
 
+    std::string camera_topic;
+
     std::vector<cv::Vec2d> mid_lane;
 
     void imageCallback(const sensor_msgs::ImageConstPtr &msg);

@@ -2,8 +2,10 @@
 
 LaneDetection::LaneDetection() : it(nh)
 {
+    nh.getParam("/lane_detection_node/camera_topic", camera_topic);
+
     lane_pub = nh.advertise<turtlebot3_lane_detection::line_msg>("/lane_detection/angle", 1000);
-    camera_sub = it.subscribe("/camera/color/image_raw", 1, &LaneDetection::imageCallback, this);
+    camera_sub = it.subscribe(camera_topic, 1, &LaneDetection::imageCallback, this);
 
     // Image publishers
     image_lane_pub = it.advertise("/lane_detection/image/image_lane", 1);
@@ -12,14 +14,10 @@ LaneDetection::LaneDetection() : it(nh)
 void LaneDetection::imageCallback(const sensor_msgs::ImageConstPtr &msg)
 {
     cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-
     cv::Mat image_canny = CannyThreshold(image);
 
     cv::Mat imageRoi = defineROI(image_canny);
     cv::Mat img_LaneDetection = defineROI(image);
-
-    std::vector<cv::Vec4i> lines; // will hold the results of the detection
-    detectLines(imageRoi, lines);
 
     cv::Mat image_lane = computeMeamLaneBoundingBox(imageRoi);
 
@@ -81,17 +79,6 @@ cv::Mat LaneDetection::defineROI(cv::Mat &im)
     cv::Mat ROI = imgROI(Rec);
 
     return ROI;
-}
-
-/**
- * @brief Standard Hough Line Transform
- *
- * @param im
- * @param lines
- */
-void LaneDetection::detectLines(cv::Mat &im, std::vector<cv::Vec4i> &lines)
-{
-    HoughLinesP(im, lines, 1, CV_PI / 180, 5, 40, 10); // runs the actual detection
 }
 
 /**
