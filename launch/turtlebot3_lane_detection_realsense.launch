@@ -1,0 +1,10 @@
+<launch>
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+
+    <arg name="camera" value="/camera/color/image_raw" />
+
+    <node name="lane_detection_node" pkg="turtlebot3_lane_detection" type="lane_detection_node" output="screen">
+        <param name="camera_topic" value="$(arg camera)"/>
+    </node>
+
+</launch>
