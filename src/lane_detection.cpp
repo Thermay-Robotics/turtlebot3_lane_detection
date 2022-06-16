@@ -2,7 +2,7 @@
 
 LaneDetection::LaneDetection() : it(nh)
 {
-    nh.getParam("/lane_detection_node/camera_topic", camera_topic);
+    nh.getParam("/lane_detection/camera_topic", camera_topic);
 
     lane_pub = nh.advertise<turtlebot3_lane_detection::line_msg>("/lane_detection/angle", 1000);
     camera_sub = it.subscribe(camera_topic, 1, &LaneDetection::imageCallback, this);
